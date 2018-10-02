@@ -1,0 +1,73 @@
+/* 
+* Hayden Wolff
+* Comp 20 Lab 4 responsive.css
+* 9/30/18
+*/
+
+@media only screen 
+and (max-width: 600px) 
+and (-webkit-min-device-pixel-ratio: 1) {
+    .software{
+        width: 477px;
+        height: 613px;
+        background: url("software.png")-725px -594px;
+    }
+}
+
+@media only screen
+and (min-width: 601px)  
+and (max-width: 800px) 
+and (-webkit-min-device-pixel-ratio: 1) {
+    .software{
+        width: 705px;
+        height: 613px;
+    	background: url("software.png")0px -594px;
+
+    }
+}
+
+@media only screen
+and (min-width: 801px)  
+and (max-width: 1000px) 
+and (-webkit-min-device-pixel-ratio: 1) {
+    .software{
+        width: 443px;
+        height: 573px;
+    	background: url("software.png")-875px 0px;
+
+    }
+}
+
+@media only screen
+and (min-width: 1001px)  
+and (max-width: 1200px) 
+and (-webkit-min-device-pixel-ratio: 1) {
+    .software{
+        width: 443px;
+        height: 573px;
+        background: url("software.png")-451px 0px;
+
+    }
+}
+
+
+@media only screen
+and (min-width: 1200px)  
+and (-webkit-min-device-pixel-ratio: 1) {
+    .software{
+        width: 434px;
+        height: 573px;
+        background: url("software.png")0px 0px;
+
+    }
+}
+
+
+
+
+
+
+
+
+
+

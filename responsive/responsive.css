@@ -31,8 +31,8 @@ and (min-width: 801px)
 and (max-width: 1000px) 
 and (-webkit-min-device-pixel-ratio: 1) {
     .software{
-        width: 443px;
-        height: 573px;
+        width: 323px;
+        height: 565px;
     	background: url("software.png")-875px 0px;
 
     }
@@ -43,8 +43,8 @@ and (min-width: 1001px)
 and (max-width: 1200px) 
 and (-webkit-min-device-pixel-ratio: 1) {
     .software{
-        width: 443px;
-        height: 573px;
+        width: 423px;
+        height: 566px;
         background: url("software.png")-451px 0px;
 
     }

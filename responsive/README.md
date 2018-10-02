@@ -1,8 +1,5 @@
-/* 
 * Hayden Wolff
-* Comp 20 Lab 4 README
-* 9/30/18
-*/
+* Comp 20 Lab 4
 
 1) All parts of this lab have been correctly implemented. The resizing of the browser width results in a correct responsive image display from a sprite sheet. 
 

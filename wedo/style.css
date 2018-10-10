@@ -1,0 +1,21 @@
+/* 
+* Hayden Wolff
+* Comp 20 Lab 5 
+* style.css
+* 10/9/18
+*/
+
+h3 {
+	font-family: 'Roboto Mono', monospace;
+	color: black
+}
+
+#title { 
+color:purple;
+text-align: left;
+font-family: 'Roboto Mono', monospace;
+font-weight: 900; 
+font-variant: small-caps
+}
+
+

@@ -1,0 +1,27 @@
+/* 
+* Hayden Wolff
+* Comp 20 Lab 5 
+* style.css
+* 10/9/18
+*/
+
+html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+/*
+.heading {
+	font-family: 'Helvetica', monospace;
+	color:black;
+	text-align:center;
+
+}
+*/
+
+#map {
+	height:100%;
+	width:100%;
+	margin:auto;
+
+}

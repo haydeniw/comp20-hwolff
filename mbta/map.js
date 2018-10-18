@@ -114,6 +114,42 @@ var flightPath = new google.maps.Polyline({
 flightPath.setMap(map);
 }
 
+// putting marker on user's current location
+if (navigator.geolocation) {
+	navigator.geolocation.getCurrentPosition(function(somePos) {
+		var user_lat = somePos.coords.latitude;
+		var user_long = somePos.coords.longitude;
+		var user_loc = {lat:user_lat, lng: user_long};
+		var user_marker = new google.maps.Marker({
+		position: user_loc,
+		map: map,
+		//title: title_ray[i],
+		icon: "user_loc2.png"
+		});
+		map.setCenter(user_marker.getPosition());
+
+	});
+}
+
+
+var min_dist = -1;
+for (var i = 0; i < (marker_ray.length); i+=1) {
+	dist = google.maps.geometry.spherical.computeDistanceBetween(user_loc, marker_ray[i]);
+	console.log("distance: ", dist);
+}
+
+
+
+
+// var my_lat;
+// var my_long;
+// function showPosition(position) {
+//      my_lat = position.coords.latitude
+//      my_long = position.coords.longitude; 
+//     console.log("lat: ", my_lat);
+//     console.log("long: ", my_long);
+// }
+
 
 /*
 var marker = new 

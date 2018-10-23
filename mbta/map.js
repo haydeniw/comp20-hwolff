@@ -133,7 +133,7 @@ gmap_ray[k].addListener('click', function() {
           infowindow = new google.maps.InfoWindow({
     	  content: title_ray[k]
   		});
-        infowindow.open(map, gmap_ray[0]); 
+        infowindow.open(map, gmap_ray[k]); 
         });
 }
 }

@@ -1,9 +1,3 @@
-	function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 42.352271, lng: -71.05524200000001},
-        zoom: 17
-        });
-
 var south_loc = {lat:42.352271 , lng: -71.05524200000001};
 var south_title = 'South Station';
 var andrew_loc = {lat:42.330154, lng: -71.057655};
@@ -49,16 +43,7 @@ var central_title = 'Central Square';
 var braintree_loc = {lat:42.2078543, lng: -71.0011385};
 var braintree_title = 'Braintree';
 
-
 var markers = [];
-/*
-var marker_ray = [south_loc, andrew_loc, porter_loc,
-				 harvard_loc, jfk_loc, savin_loc, park_loc, 
-				 broadway_loc, nquincy_loc, shawmut_loc,
-				 davis_loc, alewife_loc, kendall_loc,
-				 charles_loc, dtcross_loc, quincyc_loc, 
-				 quincya_loc, ashmont_loc, wollaston_loc,
-				 fields_loc, central_loc, braintree_loc]; */
 
 var marker_ray = [alewife_loc, davis_loc, porter_loc,
 				 harvard_loc, central_loc, kendall_loc,
@@ -75,35 +60,45 @@ var extension_stats = [jfk_loc, savin_loc, fields_loc,
 var title_ray = [south_title, andrew_title, porter_title, 
 				 harvard_title, jfk_title, savin_title, 
 				 park_title, broadway_title, nquincy_title,
-				 shawmut_loc, davis_loc, alewife_loc, kendall_loc,
-				 charles_loc, dtcross_loc, quincyc_loc, 
-				 quincya_loc, ashmont_loc, wollaston_loc,
-				 fields_loc, central_loc, braintree_loc];
+				 shawmut_title, davis_title, alewife_title, kendall_title,
+				 charles_title, dtcross_title, quincyc_title, 
+				 quincya_title, ashmont_title, wollaston_title,
+				 fields_title, central_title, braintree_title];
+var gmap_ray = [];
+var map;
 
+
+function initMap() {
+	map = new google.maps.Map(document.getElementById('map'), {
+    	center: {lat: 42.352271, lng: -71.05524200000001},
+     	zoom: 17
+    });
+    create_markers();
+    create_polylines();
+    check_clicks();
+    extension_polylines();
+    get_user_loc();
+
+}
+
+function create_markers() {
 var image = 'pin_marker.png';
 for (var i = 0; i < marker_ray.length; i+= 1) {
 	var marker = new google.maps.Marker({
 		position: marker_ray[i],
 		map: map,
-		//title: title_ray[i],
+		title: title_ray[i],
 		icon: image
+		
 	});
+	gmap_ray.push(marker);
+}
 }
 
+
+function create_polylines() {
 for (var i = 0; i < (marker_ray.length) - 5; i+=1) {
 var flightPlanCoordinates = [marker_ray[i], marker_ray[i+1]];
-var flightPath = new google.maps.Polyline({
-    path: flightPlanCoordinates,
-    geodesic: true,
-    strokeColor: '#FF0000',
-    strokeOpacity: .5,
-    strokeWeight: 2
-  });
-flightPath.setMap(map);
-}
-
-for (var i = 0; i < (extension_stats.length) - 1; i+=1) {
-var flightPlanCoordinates = [extension_stats[i], extension_stats[i+1]];
 var flightPath = new google.maps.Polyline({
     path: flightPlanCoordinates,
     geodesic: true,
@@ -113,60 +108,57 @@ var flightPath = new google.maps.Polyline({
   });
 flightPath.setMap(map);
 }
+}
 
-// putting marker on user's current location
-if (navigator.geolocation) {
+function extension_polylines() {
+for (var i = 0; i < (extension_stats.length) - 1; i+=1) {
+var flightPlanCoordinates = [extension_stats[i], extension_stats[i+1]];
+var flightPath = new google.maps.Polyline({
+    path: flightPlanCoordinates,
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: .5,
+    strokeWeight: 3
+  });
+  flightPath.setMap(map);
+}
+}
+
+
+function check_clicks() {
+var infowindow;
+for (var k = 0; k < gmap_ray.length; k+=1) {
+gmap_ray[k].addListener('click', function() {
+          console.log("click");
+          infowindow = new google.maps.InfoWindow({
+    	  content: title_ray[k]
+  		});
+        infowindow.open(map, gmap_ray[0]); 
+        });
+}
+}
+
+function get_user_loc() {
+	var me;
+	if (navigator.geolocation) {
 	navigator.geolocation.getCurrentPosition(function(somePos) {
-		var user_lat = somePos.coords.latitude;
-		var user_long = somePos.coords.longitude;
-		var user_loc = {lat:user_lat, lng: user_long};
-		var user_marker = new google.maps.Marker({
-		position: user_loc,
-		map: map,
-		//title: title_ray[i],
-		icon: "user_loc2.png"
-		});
-		map.setCenter(user_marker.getPosition());
+			myLat=somePos.coords.latitude;
+			myLng=somePos.coords.longitude;
+		console.log("user lat: ", myLat);
+		console.log("user long: ", myLng);
+		me = new google.maps.LatLng(myLat, myLng);
+		map.panTo(me);
+	});
 
+	var user_marker = new google.maps.Marker({
+		center: me,
+		position: me,
+		map: map,
+		icon: 'user_loc2.png'
 	});
 }
-
-
-var min_dist = -1;
-for (var i = 0; i < (marker_ray.length); i+=1) {
-	dist = google.maps.geometry.spherical.computeDistanceBetween(user_loc, marker_ray[i]);
-	console.log("distance: ", dist);
 }
 
 
-
-
-// var my_lat;
-// var my_long;
-// function showPosition(position) {
-//      my_lat = position.coords.latitude
-//      my_long = position.coords.longitude; 
-//     console.log("lat: ", my_lat);
-//     console.log("long: ", my_long);
-// }
-
-
-/*
-var marker = new 
-	google.maps.Marker({
-    position: south_stat_loc,
-    map: map,
-    title: 'South Station'
-  });
-
-var marker = new 
-	google.maps.Marker({
-    position: south_stat_loc,
-    map: map,
-    title: 'South Station'
-  });
-  */
-
-}
 
 

@@ -166,8 +166,9 @@ function makeRequest() {
 
 	var stop_info;
 	stations.forEach(function(station) {
-
+	var all_content = "";
 	var curr_id = station.stop_id;
+	var train_info = [];
 
 	google.maps.event.addListener(station.marker, 'click', function() {
 	var request = new XMLHttpRequest();
@@ -176,23 +177,30 @@ function makeRequest() {
 		if (request.readyState == 4 && request.status == 200) {
 			var theData = request.responseText;
 			loc_data = JSON.parse(theData);
-			console.log(loc_data);
 			loc_data["data"].forEach(function(info) {
-				var time = info["attributes"]["arrival_time"];
-				var direction = info["attributes"]["direction_id"];
-				console.log("time:", time);
-				console.log("direction", direction);
-				if (direction == 0) {
-					d = "Southbound";
-					t = time;
-				}
-				else {
-					d = "Northbound";
-					t = time;
-				}
+				var a_time = info["attributes"]["arrival_time"];
+				var a_direction = info["attributes"]["direction_id"];
+				train_info.push({time: a_time, direction: a_direction})
 			});
+			
+			console.log("hi");
+			for (n = 0; n < 10; n+=1) {
+				t = train_info[n].time;
+				d = train_info[n].direction;
+				if (d == 0) {
+					d = "Southbound ";
+				} else {
+					d = "Northbound ";
+				}
+				if (t == null) {
+					t = "TBD "
+				}
+				all_content += "Direction: " + d + "<br>" + "Arrival Time: " + t + "<br>" + "<br>";
+			}
+			console.log(all_content);
 			var infoWindow = new google.maps.InfoWindow({
-				content: station.stop_name + "<br>" + "Direction: " + d + "<br>" + "Arrival Time: " + t
+				// content: station.stop_name + "<br>" + "Direction: " + d + "<br>" + "Arrival Time: " + t
+				content: station.stop_name + "<br>" + "<br>" + "Upcoming trains: " + "<br>" + all_content
 			});
 			infoWindow.open(map, station.marker);
 		}
@@ -201,8 +209,6 @@ function makeRequest() {
 	});
 });
 }
-
-
 
 function foo() {
 

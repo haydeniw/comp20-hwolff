@@ -36,78 +36,90 @@ var ashmont_loc = {lat:42.284652, lng: -71.06448899999999};
 var ashmont_title = 'Ashmont'; 
 var wollaston_loc = {lat:42.2665139, lng: -71.0203369};
 var wollaston_title = 'Wollaston';
-var fields_loc = {lat:42.300093, lng: -71.061667};
+var fields_loc = {lat: 42.300093, lng: -71.061667};
 var fields_title = 'Fields Corner';
-var central_loc = {lat:42.365486, lng: -71.103802};
+var central_loc = {lat: 42.365486, lng: -71.103802};
 var central_title = 'Central Square';
-var braintree_loc = {lat:42.2078543, lng: -71.0011385};
+var braintree_loc = {lat: 42.2078543, lng: -71.0011385};
 var braintree_title = 'Braintree';
 
-var markers = [];
-
-var marker_ray = [alewife_loc, davis_loc, porter_loc,
-				 harvard_loc, central_loc, kendall_loc,
-				 charles_loc, park_loc, dtcross_loc,
-				 south_loc, broadway_loc, andrew_loc, 
-				 jfk_loc, nquincy_loc, wollaston_loc, 
-				 quincyc_loc, quincya_loc, braintree_loc,
-				 savin_loc, shawmut_loc, ashmont_loc,
-				 fields_loc];
+var stations = [
+{position: alewife_loc, stop_name: "Alewife", stop_id: "place-alcfcl", marker: null},
+{position: davis_loc, stop_name: "Davis", stop_id: "place-davis", marker: null},
+{position: porter_loc, stop_name: "Porter Square", stop_id: "place-pptr", marker: null}, 
+{position: harvard_loc, stop_name: "Harvard Square", stop_id: "place-hrsq", marker: null}, 
+{position: central_loc, stop_name: "Central Square", stop_id: "place-cntsq", marker: null},
+{position: kendall_loc, stop_name: "Kendall/MIT", stop_id: "place-knncl", marker: null},
+{position: charles_loc, stop_name: "Charles/MGH", stop_id: "place-chnml", marker: null},
+{position: park_loc, stop_name: "Park Street", stop_id: "place-pktrm", marker: null},
+{position: dtcross_loc, stop_name: "Downtown Crossing", stop_id: "place-dwnxg", marker: null},
+{position: south_loc, stop_name: "South Station", stop_id: "place-sstat", marker: null},
+{position: broadway_loc, stop_name: "Broadway", stop_id: "place-brdwy", marker: null},
+ {position: andrew_loc, stop_name: "Andrew", stop_id: "place-andrw", marker: null},
+{position: jfk_loc, stop_name: "JFK/UMASS", stop_id: "place-jfk", marker: null}, 
+ {position: nquincy_loc, stop_name: "North Quincy", stop_id: "place-nqncy", marker:null},
+{position: wollaston_loc, stop_name: "Wollaston", stop_id: "place-wlsta", marker:null},
+ {position: quincyc_loc, stop_name: "Quincy Center", stop_id: "place-qnctr", marker:null},
+{position: quincya_loc, stop_name: "Quincy Adams", stop_id: "place-qamnl", marker:null},
+{position: braintree_loc, stop_name: "Braintree", stop_id: "place-brntn", marker:null}, 
+{position: savin_loc, stop_name: "Savin Hill", stop_id: "place-shmnl", marker: null}, 
+{position: fields_loc, stop_name: "Fields Corner", stop_id: "place-fldcr", marker: null},
+{position: shawmut_loc, stop_name: "Shawmut", stop_id: "place-smmnl", marker: null},
+{position: ashmont_loc, stop_name: "Ashmont", stop_id: "place-asmnl", marker: null}
+];	
 
 var extension_stats = [jfk_loc, savin_loc, fields_loc, 
-					  shawmut_loc, ashmont_loc];
+					  shawmut_loc, ashmont_loc];			 
 
-var title_ray = [south_title, andrew_title, porter_title, 
-				 harvard_title, jfk_title, savin_title, 
-				 park_title, broadway_title, nquincy_title,
-				 shawmut_title, davis_title, alewife_title, kendall_title,
-				 charles_title, dtcross_title, quincyc_title, 
-				 quincya_title, ashmont_title, wollaston_title,
-				 fields_title, central_title, braintree_title];
+var markers;
+
 var gmap_ray = [];
-var map;
 
+var myLat;
+var myLng;
+var me;
+var map;
+var loc_data;
+// var infoWindow;
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
     	center: {lat: 42.352271, lng: -71.05524200000001},
      	zoom: 17
     });
-    create_markers();
-    create_polylines();
-    check_clicks();
-    extension_polylines();
-    get_user_loc();
-
+ 	setMarkers();
+ 	generatePolylines();
+ 	extension_polylines();
+    getUserLoc();
+    makeRequest();
+    foo();
 }
 
-function create_markers() {
-var image = 'pin_marker.png';
-for (var i = 0; i < marker_ray.length; i+= 1) {
-	var marker = new google.maps.Marker({
-		position: marker_ray[i],
-		map: map,
-		title: title_ray[i],
-		icon: image
-		
-	});
-	gmap_ray.push(marker);
-}
+function setMarkers() {
+	var image = 'pin_marker.png';
+	for (i = 0; i < (stations.length); i+= 1) {
+		marker = new google.maps.Marker({
+			position: stations[i].position,
+			map: map,
+			icon: image	
+		});
+		stations[i].marker = marker;
+		// marker.content = "hi"; // CHANGE TO DATA
+	}
 }
 
-
-function create_polylines() {
-for (var i = 0; i < (marker_ray.length) - 5; i+=1) {
-var flightPlanCoordinates = [marker_ray[i], marker_ray[i+1]];
-var flightPath = new google.maps.Polyline({
-    path: flightPlanCoordinates,
-    geodesic: true,
-    strokeColor: '#FF0000',
-    strokeOpacity: .5,
-    strokeWeight: 3
-  });
-flightPath.setMap(map);
-}
+function generatePolylines() {
+	for (var i = 0; i < (stations.length)-5; i+=1) {
+		var flightPlanCoordinates = [stations[i].position, stations[i+1].position];
+		var flightPath = new google.maps.Polyline({
+		    path: flightPlanCoordinates,
+		    geodesic: true,
+		    strokeColor: '#FF0000',
+		    strokeOpacity: .5,
+		    strokeWeight: 3
+		  });
+	flightPath.setMap(map);
+	}
 }
 
 function extension_polylines() {
@@ -124,40 +136,86 @@ var flightPath = new google.maps.Polyline({
 }
 }
 
-
-function check_clicks() {
-var infowindow;
-for (var k = 0; k < gmap_ray.length; k+=1) {
-gmap_ray[k].addListener('click', function() {
-          console.log("click");
-          infowindow = new google.maps.InfoWindow({
-    	  content: title_ray[k]
-  		});
-        infowindow.open(map, gmap_ray[k]); 
-        });
-}
-}
-
-function get_user_loc() {
-	var me;
+function getUserLoc() {
 	if (navigator.geolocation) {
-	navigator.geolocation.getCurrentPosition(function(somePos) {
-			myLat=somePos.coords.latitude;
-			myLng=somePos.coords.longitude;
-		console.log("user lat: ", myLat);
-		console.log("user long: ", myLng);
-		me = new google.maps.LatLng(myLat, myLng);
-		map.panTo(me);
-	});
+		navigator.geolocation.getCurrentPosition(function(myPos)
+		{
+			myLat = myPos.coords.latitude;
+			myLng = myPos.coords.longitude;
+			me = new google.maps.LatLng(myLat, myLng);
+			map.panTo(me);
+			setMyMarker();		
+		});
+	
+	} else {
+		alert("Geolocation not supported :(");
+	}
+}
 
-	var user_marker = new google.maps.Marker({
-		center: me,
+function setMyMarker() {
+	var user_icon = 'user_loc2.png';
+	my_marker = new google.maps.Marker({
 		position: me,
 		map: map,
-		icon: 'user_loc2.png'
+		icon: user_icon
 	});
 }
+
+
+function makeRequest() {
+
+	var stop_info;
+	stations.forEach(function(station) {
+
+	var curr_id = station.stop_id;
+
+	google.maps.event.addListener(station.marker, 'click', function() {
+	var request = new XMLHttpRequest();
+	request.open("GET", "https://api-v3.mbta.com/predictions?filter[route]=Red&filter[stop]=" + curr_id + "&page[limit]=10&page[offset]=0&sort=departure_time&api_key=" + "80f86788e44e4a7c94219e24af52eda0", true);
+	request.onreadystatechange = function() {
+		if (request.readyState == 4 && request.status == 200) {
+			var theData = request.responseText;
+			loc_data = JSON.parse(theData);
+			console.log(loc_data);
+			loc_data["data"].forEach(function(info) {
+				var time = info["attributes"]["arrival_time"];
+				var direction = info["attributes"]["direction_id"];
+				console.log("time:", time);
+				console.log("direction", direction);
+				if (direction == 0) {
+					d = "Southbound";
+					t = time;
+				}
+				else {
+					d = "Northbound";
+					t = time;
+				}
+			});
+			var infoWindow = new google.maps.InfoWindow({
+				content: station.stop_name + "<br>" + "Direction: " + d + "<br>" + "Arrival Time: " + t
+			});
+			infoWindow.open(map, station.marker);
+		}
+	}
+		request.send();
+	});
+});
 }
+
+
+
+function foo() {
+
+for (a = 0; a < gmap_ray.length; a+=1) {
+	console.log("here");
+	console.log(gmap_ray[a]);
+}
+
+}
+
+
+
+
 
 
 

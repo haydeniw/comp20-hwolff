@@ -1,6 +1,6 @@
 /* 
 * Hayden Wolff
-* Comp 20 Lab 5 
+* Comp 20 Assignment 2
 * style.css
 * 10/9/18
 */
@@ -10,14 +10,6 @@ html, body {
         margin: 0;
         padding: 0;
       }
-/*
-.heading {
-	font-family: 'Helvetica', monospace;
-	color:black;
-	text-align:center;
-
-}
-*/
 
 #map {
 	height:100%;

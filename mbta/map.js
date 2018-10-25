@@ -1,47 +1,32 @@
+/* 
+* Hayden Wolff
+* Comp 20 Assignment 2
+* map.js
+* 10/25/18
+*/
+
 var south_loc = {lat:42.352271 , lng: -71.05524200000001};
-var south_title = 'South Station';
 var andrew_loc = {lat:42.330154, lng: -71.057655};
-var andrew_title = 'Andrew';
 var porter_loc = {lat:42.3884, lng: -71.11914899999999};
-var porter_title = 'Porter Square';
 var harvard_loc = {lat:42.373362, lng: -71.118956};
-var harvard_title = 'Harvard Square';
 var jfk_loc = {lat:42.320685, lng: -71.052391};
-var jfk_title = 'JFK/UMass';
 var savin_loc = {lat:42.31129, lng: -71.053331};
-var savin_title = 'Savin Hill';
 var park_loc = {lat:42.35639457, lng: -71.0624242};
-var park_title = 'Park Street';
 var broadway_loc = {lat:42.342622, lng: -71.056967};
-var broadway_title = 'Broadway'; 
 var nquincy_loc = {lat:42.275275, lng: -71.029583};
-var nquincy_title = 'North Quincy';
 var shawmut_loc = {lat:42.29312583, lng: -71.06573796000001};
-var shawmut_title = 'Shawmut'; 
 var davis_loc = {lat:42.39674, lng: -71.121815};
-var davis_title = 'Davis'; 
 var alewife_loc = {lat:42.395428, lng: -71.142483};
-var alewife_title = 'Alewife'; 
 var kendall_loc = {lat:42.36249079, lng: -71.08617653};
-var kendall_title = 'Kendall/MIT'; 
 var charles_loc = {lat:42.361166, lng: -71.070628};
-var charles_title = 'Charles/MGH'; 
 var dtcross_loc = {lat:42.355518, lng: -71.060225};
-var dtcross_title = 'Downtown Crossing'; 
 var quincyc_loc = {lat:42.251809, lng: -71.005409};
-var quincyc_title = 'Quincy Center'; 
 var quincya_loc = {lat:42.233391, lng: -71.007153};
-var quincya_title = 'Quincy Adams'; 
 var ashmont_loc = {lat:42.284652, lng: -71.06448899999999};
-var ashmont_title = 'Ashmont'; 
 var wollaston_loc = {lat:42.2665139, lng: -71.0203369};
-var wollaston_title = 'Wollaston';
 var fields_loc = {lat: 42.300093, lng: -71.061667};
-var fields_title = 'Fields Corner';
 var central_loc = {lat: 42.365486, lng: -71.103802};
-var central_title = 'Central Square';
 var braintree_loc = {lat: 42.2078543, lng: -71.0011385};
-var braintree_title = 'Braintree';
 
 var stations = [
 {position: alewife_loc, stop_name: "Alewife", stop_id: "place-alcfcl", marker: null},
@@ -70,9 +55,7 @@ var stations = [
 
 var extension_stats = [jfk_loc, savin_loc, fields_loc, 
 					  shawmut_loc, ashmont_loc];			 
-
 var markers;
-
 var gmap_ray = [];
 
 var myLat;
@@ -80,7 +63,9 @@ var myLng;
 var me;
 var map;
 var loc_data;
-// var infoWindow;
+var myMarker;
+var close_stat_name;
+var dist_station;
 
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -92,7 +77,6 @@ function initMap() {
  	extension_polylines();
     getUserLoc();
     makeRequest();
-    foo();
 }
 
 function setMarkers() {
@@ -104,7 +88,6 @@ function setMarkers() {
 			icon: image	
 		});
 		stations[i].marker = marker;
-		// marker.content = "hi"; // CHANGE TO DATA
 	}
 }
 
@@ -144,9 +127,15 @@ function getUserLoc() {
 			myLng = myPos.coords.longitude;
 			me = new google.maps.LatLng(myLat, myLng);
 			map.panTo(me);
-			setMyMarker();		
+			setMyMarker();
+			calcClosest(myLat, myLng);
+			var infoWindow = new google.maps.InfoWindow({
+				content: "Closest station: " + close_stat_name + "<br>" + dist_station + " miles away" + "<br>"
+			});
+			infoWindow.open(map, my_marker);
+
+
 		});
-	
 	} else {
 		alert("Geolocation not supported :(");
 	}
@@ -161,9 +150,7 @@ function setMyMarker() {
 	});
 }
 
-
 function makeRequest() {
-
 	var stop_info;
 	stations.forEach(function(station) {
 	var all_content = "";
@@ -183,7 +170,6 @@ function makeRequest() {
 				train_info.push({time: a_time, direction: a_direction})
 			});
 			
-			console.log("hi");
 			for (n = 0; n < 10; n+=1) {
 				t = train_info[n].time;
 				d = train_info[n].direction;
@@ -197,9 +183,7 @@ function makeRequest() {
 				}
 				all_content += "Direction: " + d + "<br>" + "Arrival Time: " + t + "<br>" + "<br>";
 			}
-			console.log(all_content);
 			var infoWindow = new google.maps.InfoWindow({
-				// content: station.stop_name + "<br>" + "Direction: " + d + "<br>" + "Arrival Time: " + t
 				content: station.stop_name + "<br>" + "<br>" + "Upcoming trains: " + "<br>" + all_content
 			});
 			infoWindow.open(map, station.marker);
@@ -210,14 +194,66 @@ function makeRequest() {
 });
 }
 
-function foo() {
 
-for (a = 0; a < gmap_ray.length; a+=1) {
-	console.log("here");
-	console.log(gmap_ray[a]);
+Number.prototype.toRad = function()
+{
+    return this * Math.PI / 180;
 }
 
+function calcClosest(myLat, myLng) {
+var closest = 9999999;
+var lat2;
+var lon2;
+var counter = 0;
+	stations.forEach(function(station) {
+		counter = counter + 1
+		var lat1 = myLat;
+		var lon1 = myLng;
+		var lat2 = station.position.lat;
+		var lon2 = station.position.lng;
+		
+		var x1 = lat2 - lat1;
+		var dist_lat = x1.toRad();
+		var x2 = lon2 - lon1;
+		var dist_long = x2.toRad();
+
+		var a = Math.sin(dist_lat/2) * Math.sin(dist_lat/2) +
+    	Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+    	Math.sin(dist_long/2) * Math.sin(dist_long/2);
+
+    	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    	var d = c * 3958.7657052;
+
+		if (d < closest) {
+			closest = d;
+			close_stat_name = station.stop_name;
+			dist_station = d;
+			closePolyline(lat2, lon2, lat1, lon1);	
+		}
+	});
 }
+
+
+function closePolyline(lat2, lon2, myLat, myLng) {
+var flightPlanCoordinates = [{lat: lat2, lng: lon2}, 
+							{lat: myLat, lng: myLng}];
+var flightPath = new google.maps.Polyline({
+    path: flightPlanCoordinates,
+    geodesic: true,
+    strokeColor: '#551a8b',
+    strokeOpacity: .5,
+    strokeWeight: 3
+  });
+  flightPath.setMap(map);
+}
+
+
+
+
+
+
+
+
 
 
 

@@ -10,6 +10,19 @@
     <script>
         // Your work will be done here...
         // PUT STUFF IN HERE
+        $(document).keydown(function(e) {
+            if (e.keyCode == 13) {
+                // $('h1').css("background-color", "#FFFF00").css("border", "dashed");
+                console.log("enter clicked");
+                var txt = $('#msg').val();
+                $("#log").prepend(txt + "<br>");
+                // document.getElementById("log").innerHTML += txt + "<br>";
+
+            }
+        });
+
+
+
     </script>
 </head>
 

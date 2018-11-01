@@ -10,18 +10,64 @@
     <script>
         // Your work will be done here...
         // PUT STUFF IN HERE
+
+
         $(document).keydown(function(e) {
             if (e.keyCode == 13) {
-                // $('h1').css("background-color", "#FFFF00").css("border", "dashed");
-                console.log("enter clicked");
-                var txt = $('#msg').val();
-                $("#log").prepend(txt + "<br>");
-                // document.getElementById("log").innerHTML += txt + "<br>";
-
+                storeInfo();
+                load();
             }
+
+
         });
 
 
+        /*
+        function reload() {
+            elem = $("#log");
+            entry = "";
+            date = "";
+            console.log(localStorage.length);
+            for (var i = 0; i < localStorage.length; i++)
+            {
+                date = localStorage.key(i);
+                entry = localStorage.getItem(localStorage.key(i));
+                console.log(entry);
+                console.log(date);
+                $("#log").prepend(entry);
+                $("#log").prepend(date);
+                
+            }    
+        }
+        */
+        function storeInfo() {
+            // $(document).keydown(function(e) {
+                // if (e.keyCode == 13) {
+                    console.log("enter clicked");
+                    var txt = $('#msg').val();
+                    txt = txt + "<br>";
+                    var d = new Date();
+                    d = d + " - ";
+                    console.log(d);
+                    console.log(txt);
+                    // localStorage.setItem(d, txt);
+                    // reload();
+                    localStorage.setItem(d, txt);
+                // }
+            // });
+        }
+
+        function load(){
+            $("#log").empty();
+            for (i = localStorage.length-1; i >= 0; i--) 
+            {
+                date = localStorage.key(i);
+                entry = localStorage.getItem(localStorage.key(i));
+                $("#log").append(date);
+                $("#log").append(entry);
+            }
+
+        }
 
     </script>
 </head>

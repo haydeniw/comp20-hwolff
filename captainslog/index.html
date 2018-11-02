@@ -8,53 +8,21 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-        // Your work will be done here...
-        // PUT STUFF IN HERE
-
 
         $(document).keydown(function(e) {
             if (e.keyCode == 13) {
                 storeInfo();
                 load();
             }
-
-
         });
 
-
-        /*
-        function reload() {
-            elem = $("#log");
-            entry = "";
-            date = "";
-            console.log(localStorage.length);
-            for (var i = 0; i < localStorage.length; i++)
-            {
-                date = localStorage.key(i);
-                entry = localStorage.getItem(localStorage.key(i));
-                console.log(entry);
-                console.log(date);
-                $("#log").prepend(entry);
-                $("#log").prepend(date);
-                
-            }    
-        }
-        */
         function storeInfo() {
-            // $(document).keydown(function(e) {
-                // if (e.keyCode == 13) {
-                    console.log("enter clicked");
-                    var txt = $('#msg').val();
-                    txt = txt + "<br>";
-                    var d = new Date();
-                    d = d + " - ";
-                    console.log(d);
-                    console.log(txt);
-                    // localStorage.setItem(d, txt);
-                    // reload();
-                    localStorage.setItem(d, txt);
-                // }
-            // });
+            console.log("enter clicked");
+            var txt = $('#msg').val();
+            txt = txt + "<br>";
+            var d = new Date();
+            d = d + " - ";
+            localStorage.setItem(d, txt);
         }
 
         function load(){
@@ -66,7 +34,6 @@
                 $("#log").append(date);
                 $("#log").append(entry);
             }
-
         }
 
     </script>

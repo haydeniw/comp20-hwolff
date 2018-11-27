@@ -1,0 +1,32 @@
+/* 
+* Hayden Wolff
+* Comp 20 Assignment 4
+* style.css
+* 11/27/18
+*/
+
+h1 {
+	font-family: 'Roboto Mono', monospace;
+	color: black;
+	text-align: center;
+}
+
+h3 {
+	font-family: 'Roboto Mono', monospace;
+	color: black;
+	text-align: center;
+}
+
+#sect_header{
+	font-family: 'Helvetica', monospace;
+	color: black;
+	padding-top: 50px;
+    padding-right: 30px;
+    padding-bottom: 50px;
+    padding-left: 60px;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+
+

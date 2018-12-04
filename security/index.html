@@ -3,6 +3,9 @@
 * Comp 20 Assignment 4
 * index.html
 * 11/27/18
+
+NOTE: TALK ABOUT LOOKING AT CODE TO SEE IF USERNAME
+HARDCODED IN OR NOT
 -->
 
 <!DOCTYPE html>
@@ -19,10 +22,106 @@
     <h1>Security Findings</h1>
     <h3>Comp 20 Assignment 4 Hayden Wolff</h3>
     <div id="sect_header">I. Introduction</div>
+
+    <div id="sect_text">
+    This is a report to identify security and privacy vulnerabilities in Anna's Comp20 Assignment 3. Several
+    of these vulnerabilities are in the <a href ="https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf">
+    OWASP Top 10 (2017).</a> Therefore, they are crucial to fix. EXPLAIN WHAT OWASP 
+    TOP 10 IS!!!!! *****
+    </div>
     <div id="sect_header">II. Methodology</div>
+    <div id="sect_text">
+    I first performed black box testing by performing attacks without
+    knowing what Anna's source code was. During this process I used
+    both curl and bash scripts. I was able to find many vulnerabilities simply with these two tools. 
+    Afterwards, I looked through Anna's source code to find more
+    vulnerabilities. I used no external tools during this process.
+    </div>
     <div id="sect_header">III. Abstract of Findings</div>
+    <div id="sect_text_bold">
+    Cross-Site Scripting (XSS)
+    </div>
+    <div id="sect_text">
+    Cross-Site Scripting, also known as XSS, is in the OWASP top 10
+    vulnerabilities as number 7. An attacker can inject malicious instructions
+    often through user input. XSS becomes dangerous when JavaScript is injected
+    so that the attacker can:
+    <ul>
+        <li>Access sensitive user information in cookies</li>
+        <li>Send the user to another website (often malicious)</li>
+        <li>Modify the page (make the user think they're doing one thing when they're
+        actually doing something else)</li>
+        <li>Log keystrokes/other user inputs to record private information (credit
+        card numbers, passwords, etc).</li>
+    <ul> 
+    </div>
+    </div>
+    <div id="sect_text_bold">
+    Mongo Injection
+    </div>
+    <div id="sect_text">
+    Injection attacks (in this case a Mongo injection) is number 1 in the OWASP top 10. In this kind of attack, "the attacker's goal is to achieve uintended
+    behavior of the database query by altering query parameters." <a href ="https://www.owasp.org/images/e/ed/GOD16-NOSQL.pdf">
+    (Patrick Spiegel, 2016). </a>
+    Although Mongo is a NoSQL database so it is immune to SQL
+    injections, it still is vulnerable to injections. Frequently,
+    NoSQL databases are used to store user data and through
+    injection attacks an attacker can:
+    <ul>
+        <li>View sensitive data stored in the database</li>
+        <li>Perform arbitrary operations on the database, modifying what is stored</li>
+        <li>AM I MISSING ANYTHING????</li>
+    <ul> 
+    </div>
+    <div id="sect_text_bold">
+    Distributed Denial-of-Service Attack (DDOS)
+    </div>
+    <div id="sect_text">
+    A DDOS attack disrupts the normal flow of traffic to a server or network by sending a high volume of requests to
+    then slow it down or crash it. It is often done with a network of many bots (a botnet). When this is done the attacker can:
+    <ul>
+        <li>Slow or shut down a server so that legitimate requests cannot be done</li>
+        <li>By deactivating a service, other break-ins can then
+        occur</li>
+        <li>AM I MISSING ANYTHING????</li>
+    <ul> 
+    </div>
+
     <div id="sect_header">IV. Issues Found</div>
+    <div id="sect_text_bold">
+    Issue: XSS
+    </div>
+    <div id="sect_text">
+    </div>
+
+    <div id="sect_text_bold">
+    Issue: Mongo Injection
+    </div>
+
+    <div id="sect_text_bold">
+    Issue: DDOS
+    </div>
+
+    <div id="sect_text_bold">
+    Issue: Hardcoding Username
+    </div>
+    
+    
     <div id="sect_header">V. Conclusion</div>
-    <div id="sect_header">VI. References</div>
+    <div id="sect_text">
+    can do a tonnnn without even knowing source code (black box)
+    </div>
+    <div id="sect_header">VI. References
+    </div>
+    <div id="sect_text">
+    https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf
+    https://excess-xss.com/
+    https://zanon.io/posts/nosql-injection-in-mongodb
+    https://www.owasp.org/images/e/ed/GOD16-NOSQL.pdf
+    https://www.infoq.com/articles/nosql-injections-analysis
+    https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/
+    https://security.stackexchange.com/questions/42621/does-a-ddos-attack-have-other-purposes-beyond-a-lack-of-availability
+    https://cwe.mitre.org/data/definitions/798.html
+    </div>
 </body>
 </html>

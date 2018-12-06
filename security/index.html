@@ -23,11 +23,11 @@
     <div id="sect_text">
     This is a report to identify security and privacy vulnerabilities in Anna's Comp20 Assignment 3. Several
     of these vulnerabilities are in the <a href ="https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf">
-    OWASP Top 10 (2017).</a> Therefore, they are crucial to fix. The OWASP Top 10 is a document that highlights the current dangers in security for web applications.
+    OWASP Top 10 (2017).</a> Therefore, they are crucial to fix. The OWASP Top 10 is a document that highlights current dangers in security for web applications.
     </div>
     <div id="sect_header">II. Methodology</div>
     <div id="sect_text">
-    I first performed black box testing by performing attacks without
+    I first did black box testing by performing attacks without
     knowing what Anna's source code was. During this process I used
     both curl and bash scripts. I was able to find many vulnerabilities simply with these two tools. 
     Afterwards, I looked through Anna's source code to find more
@@ -77,8 +77,22 @@
     then slow it down or crash it. It is often done with a network of many bots (a botnet). When this is done the attacker can:
     <ul>
         <li>Slow or shut down a server so that legitimate requests cannot be done</li>
-        <li>By deactivating a service, other break-ins can then
+        <li>Deactivate a service so other break-ins can then
         occur</li>
+    <ul> 
+    </div>
+    <div id="sect_text_bold">
+    Broken Access Control
+    </div>
+    <div id="sect_text">
+    Broken Access Control is ranked 5 on the OWASP top 10. Unauthorized API access acts as a gateway for other attacks because
+    an attacker can act outside of their intended permissions. When this is done the attacker can:
+    <ul>
+        <li>Elevate their privilege (act like a user
+        without being logged in, acting as an admin)</li>
+        <li>Access/manipulate data that should not be available</li>
+        <li>Change the key to a different user to tamper with another
+        person's account</li>
     <ul> 
     </div>
     <div id="sect_header">IV. Issues Found</div>
@@ -89,14 +103,14 @@
     Location Found: index.js in /submit post route.
     <div id="small-space"></div>
     Severity: High. XSS can very easily compromise
-    a user's safety data and additionally break an entire website
+    a user's privacy and additionally break an entire website
     with doing something as simple as redirecting it (which doesn't
     allow a user to access it).
     <div id="small-space"></div>
     Description: Because the code does not check for special characters
     in user input, it is possible to inject scripts. This was the first
-    vulnerability I checked for, and upon realizing that the website 
-    trusted that user input would be okay, I used curl to send a username
+    vulnerability I checked for. Upon realizing that the website 
+    trusted user input, I used curl to send a username
     that wasn't actually a username but rather a script that redirected the page.
     <div id="tiny-space"></div>
     Rather than just inserting fields that the user provides in its original form the input 
@@ -139,9 +153,9 @@
     Severity: High. Mongo injections can be used to both modify
     pre-existing database information or access information that
     should be private in the database. This can compromise a client's
-    privacy or also break the client's stored information.
+    privacy and/or modify the client's stored information.
     <div id="small-space"></div>
-    Description: I found this vulnerability just through black box testing. I knew that I was able to access the data of specific 
+    Description: I found this vulnerability through black box testing. I knew that I was able to access the data of specific 
     database entries by entering a query string, so I figured if I 
     used a "weird" username and tested for not equal it should dump
     the entirety of the Mongo database. It did.
@@ -227,7 +241,7 @@
     Severity: Medium. Broken access control allows for cross-origin resource sharing
     with no restrictions. This is rated medium in its severity because other protection
     measures can be put in place to protect data from being shared. However, it is much safer to just restrict usage from the beginning. <div id="small-space"></div>
-    Description: Any other website can access data from this website. This means that
+    Description: Any other website can access selected resources from this website. This means that
     private information that is stored (such as a username, password, etc.) can be
     accessed. It would be beneficial to limit cross-origin resource sharing to specific
     websites rather than to any potential attacker. It took me a while to realize that
@@ -247,7 +261,7 @@
     <div id="sect_header">V. Conclusion</div>
     <div id="sect_text">
     In conclusion, a lot of damage can be done without even knowing the source code. Additionally, implementing security fixes is quite easy because there
-    is so much web development already out there to prevent these kinds of common attacks. Especially when the it is viewed as a tradeoff between the danger
+    is so much web development already out there to prevent these kinds of common attacks. Especially when it is viewed as a tradeoff between the danger
     of attacks and the extra work for security-- putting in the extra little bit of time for security is most definitely worth it. 
     </div>
     <div id="sect_header">VI. References
@@ -261,6 +275,8 @@
     https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/ <div id="tiny-space"></div>
     https://security.stackexchange.com/questions/42621/does-a-ddos-attack-have-other-purposes-beyond-a-lack-of-availability <div id="tiny-space"></div>
     https://cwe.mitre.org/data/definitions/798.html <div id="tiny-space"></div>
+    https://www.owasp.org/index.php/Top_10-2017_A5-Broken_Access_Control
+    <div id="tiny-space"></div>
     </div>
 </body>
 </html>

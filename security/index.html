@@ -3,9 +3,6 @@
 * Comp 20 Assignment 4
 * index.html
 * 11/27/18
-
-NOTE: TALK ABOUT LOOKING AT CODE TO SEE IF USERNAME
-HARDCODED IN OR NOT
 -->
 
 <!DOCTYPE html>
@@ -26,8 +23,7 @@ HARDCODED IN OR NOT
     <div id="sect_text">
     This is a report to identify security and privacy vulnerabilities in Anna's Comp20 Assignment 3. Several
     of these vulnerabilities are in the <a href ="https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf">
-    OWASP Top 10 (2017).</a> Therefore, they are crucial to fix. EXPLAIN WHAT OWASP 
-    TOP 10 IS!!!!! *****
+    OWASP Top 10 (2017).</a> Therefore, they are crucial to fix. The OWASP Top 10 is a document that highlights the current dangers in security for web applications.
     </div>
     <div id="sect_header">II. Methodology</div>
     <div id="sect_text">
@@ -60,8 +56,9 @@ HARDCODED IN OR NOT
     Mongo Injection
     </div>
     <div id="sect_text">
-    Injection attacks (in this case a Mongo injection) is number 1 in the OWASP top 10. In this kind of attack, "the attacker's goal is to achieve uintended
-    behavior of the database query by altering query parameters." <a href ="https://www.owasp.org/images/e/ed/GOD16-NOSQL.pdf">
+    Injection attacks (in this case a Mongo injection) is number 1 in the OWASP top 10. In this kind of attack, "the attacker's goal 
+    is to achieve uintendedbehavior of the database query by altering query parameters." 
+    <a href ="https://www.owasp.org/images/e/ed/GOD16-NOSQL.pdf">
     (Patrick Spiegel, 2016). </a>
     Although Mongo is a NoSQL database so it is immune to SQL
     injections, it still is vulnerable to injections. Frequently,
@@ -70,7 +67,6 @@ HARDCODED IN OR NOT
     <ul>
         <li>View sensitive data stored in the database</li>
         <li>Perform arbitrary operations on the database, modifying what is stored</li>
-        <li>AM I MISSING ANYTHING????</li>
     <ul> 
     </div>
     <div id="sect_text_bold">
@@ -83,10 +79,8 @@ HARDCODED IN OR NOT
         <li>Slow or shut down a server so that legitimate requests cannot be done</li>
         <li>By deactivating a service, other break-ins can then
         occur</li>
-        <li>AM I MISSING ANYTHING????</li>
     <ul> 
     </div>
-
     <div id="sect_header">IV. Issues Found</div>
     <div id="sect_text_bold">
     Issue: XSS
@@ -105,8 +99,8 @@ HARDCODED IN OR NOT
     trusted that user input would be okay, I used curl to send a username
     that wasn't actually a username but rather a script that redirected the page.
     <div id="tiny-space"></div>
-    Rather than just inserting fields that the user provides in its original form the input should be cleaned. Below is how things
-    are inserted (without being checked first).
+    Rather than just inserting fields that the user provides in its original form the input 
+    should be cleaned. Below is how fields are inserted (without being checked first).
     <div id="code-ex">
         var toInsert = { <div id="tiny-space"></div>
                 'username': request.body.username, <div id="tiny-space"></div>
@@ -165,8 +159,6 @@ HARDCODED IN OR NOT
     injection attacks." It will strip out any keys that start with '$'
     and it can be passed to MongoDB. 
     </div>
-
-
     <div id="sect_text_bold">
     Issue: DDOS
     </div>
@@ -179,10 +171,12 @@ HARDCODED IN OR NOT
     <div id="small-space"></div>
     Description: It was a bit harder to test a DDOS attack, but I looked
     through Anna's code and discovered that there were no limitations
-    on requests coming from a given source (or even a lot coming from distributed services). I could not fully test a DDOS attack because
+    on requests coming from a given source (or even a lot coming from distributed services). 
+    I could not fully test a DDOS attack because
     I did not want to charge Anna extra money for overflowing her Mongo
     database, but I wrote a simple script to use curl to send a bunch of
-    submit requests to the server. Below is the script (note that I could have used an infinite loop but again didn't want to charge her money).
+    submit requests to the server. Below is the script 
+    (note that I could have used an infinite loop but again didn't want to charge her money).
     <div id="code-ex">
     #!/bin/bash <div id="tiny-space"></div>
     for ((i=1; i<=1000; i++)) <div id="tiny-space"></div>
@@ -217,8 +211,8 @@ HARDCODED IN OR NOT
     Score: 6670
     <div id="small-space"></div>
     Evident that many requests are sent in a very short period of time. <div id="small-space"></div>
-    Resolution: Use <a href ="https://www.npmjs.com/package/express-rate-limit"> express rate limit node package.</a> It limits the same IP address to only so many
-    requests. For more robust purposes, there are other services such as Cloudfare
+    Resolution: Use <a href ="https://www.npmjs.com/package/express-rate-limit"> express rate limit node package.</a> It limits the same 
+    IP address to only so many requests. For more robust purposes, there are other services such as Cloudfare
     that offer protection against DDOS attacks. 
     </div>
     </div>
@@ -229,24 +223,44 @@ HARDCODED IN OR NOT
     </div>
      <div id="sect_text">
     Location Found: index.js, line 10.
+    <div id="small-space"></div>
+    Severity: Medium. Broken access control allows for cross-origin resource sharing
+    with no restrictions. This is rated medium in its severity because other protection
+    measures can be put in place to protect data from being shared. However, it is much safer to just restrict usage from the beginning. <div id="small-space"></div>
+    Description: Any other website can access data from this website. This means that
+    private information that is stored (such as a username, password, etc.) can be
+    accessed. It would be beneficial to limit cross-origin resource sharing to specific
+    websites rather than to any potential attacker. It took me a while to realize that
+    this was a vulnerability and could only determine it by reading the source code. These two standalone lines in Anna's code allos for CORS and don't limit who has access:
+    <div id="code-ex">
+    var cors = require('cors'); <div id="tiny-space"> </div>
+    app.use(cors()); 
     </div>
-    
-    
+    Proof of Vulnerability: It is difficult to come up with a hard proof for this. However, examples 
+    can be given. For example, if this application stored something like
+    the user's email in addition to their username then a different website could
+    easily access the data if CORS is enabled for any potential attacker. This would
+    allow an attacker to retrieve a huge number of emails to then spam. <div id="small-space"></div>
+    Resolution: Rather than allowing anyone have CORS access pick specific websites that are allowed. The ability to specify for single routes is
+    <a href ="https://expressjs.com/en/resources/middleware/cors.html">here.</a>   
+    </div>
     <div id="sect_header">V. Conclusion</div>
     <div id="sect_text">
-    can do a tonnnn without even knowing source code (black box)
+    In conclusion, a lot of damage can be done without even knowing the source code. Additionally, implementing security fixes is quite easy because there
+    is so much web development already out there to prevent these kinds of common attacks. Especially when the it is viewed as a tradeoff between the danger
+    of attacks and the extra work for security-- putting in the extra little bit of time for security is most definitely worth it. 
     </div>
     <div id="sect_header">VI. References
     </div>
     <div id="sect_text">
-    https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf
-    https://excess-xss.com/
-    https://zanon.io/posts/nosql-injection-in-mongodb
-    https://www.owasp.org/images/e/ed/GOD16-NOSQL.pdf
-    https://www.infoq.com/articles/nosql-injections-analysis
-    https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/
-    https://security.stackexchange.com/questions/42621/does-a-ddos-attack-have-other-purposes-beyond-a-lack-of-availability
-    https://cwe.mitre.org/data/definitions/798.html
+    https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf <div id="tiny-space"></div>
+    https://excess-xss.com/ <div id="tiny-space"></div>
+    https://zanon.io/posts/nosql-injection-in-mongodb <div id="tiny-space"></div>
+    https://www.owasp.org/images/e/ed/GOD16-NOSQL.pdf <div id="tiny-space"></div>
+    https://www.infoq.com/articles/nosql-injections-analysis <div id="tiny-space"></div>
+    https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/ <div id="tiny-space"></div>
+    https://security.stackexchange.com/questions/42621/does-a-ddos-attack-have-other-purposes-beyond-a-lack-of-availability <div id="tiny-space"></div>
+    https://cwe.mitre.org/data/definitions/798.html <div id="tiny-space"></div>
     </div>
 </body>
 </html>

@@ -92,7 +92,7 @@ HARDCODED IN OR NOT
     Issue: XSS
     </div>
     <div id="sect_text">
-    Location Found: index.html in /submit post route.
+    Location Found: index.js in /submit post route.
     <div id="small-space"></div>
     Severity: High. XSS can very easily compromise
     a user's safety data and additionally break an entire website
@@ -141,10 +141,18 @@ HARDCODED IN OR NOT
     Issue: Mongo Injection
     </div>
     <div id="sect_text">
-    Location Found: index.html in /submit post route.
+    Location Found: index.js in /scores.json get route
+    <div id="small-space"></div>
+    Severity: High. Mongo injections can be used to both modify
+    pre-existing database information or access information that
+    should be private in the database. This can compromise a client's
+    privacy or also break the client's stored information.
+    </div>
+
 
     <div id="sect_text_bold">
     Issue: DDOS
+    https://lab8-11-7-18.herokuapp.com/scores.json?username[$ne]=a_username_no_one_entered
     </div>
 
     <div id="sect_text_bold">

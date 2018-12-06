@@ -105,8 +105,7 @@ HARDCODED IN OR NOT
     trusted that user input would be okay, I used curl to send a username
     that wasn't actually a username but rather a script that redirected the page.
     <div id="tiny-space"></div>
-    Rather than just inserting fields that the user provides in the form
-    of input, characters should be stripped first. Below is how things
+    Rather than just inserting fields that the user provides in its original form the input should be cleaned. Below is how things
     are inserted (without being checked first).
     <div id="code-ex">
         var toInsert = { <div id="tiny-space"></div>
@@ -147,16 +146,89 @@ HARDCODED IN OR NOT
     pre-existing database information or access information that
     should be private in the database. This can compromise a client's
     privacy or also break the client's stored information.
+    <div id="small-space"></div>
+    Description: I found this vulnerability just through black box testing. I knew that I was able to access the data of specific 
+    database entries by entering a query string, so I figured if I 
+    used a "weird" username and tested for not equal it should dump
+    the entirety of the Mongo database. It did.
+    <div id="small-space"></div>
+    I just had to add this query string to the URL:
+    <div id="code-ex">
+    https://lab8-11-7-18.herokuapp.com/scores.json?username[$ne]=a_username_no_one_entered </div>
+    Proof of Vulnerability: Just that single query string dumped
+    the entire Mongo database into my browser (shown below):
+    <div id="small-space"></div>
+    <img src="image_dump.jpg" alt= "Dumped database (a ton of data revealed)">
+    <div id="small-space"></div>
+    Resolution: Use <a href ="https://github.com/vkarpov15/mongo-sanitize"> mongo-sanitize.</a> "For the passionately lazy, a
+    standalone module that sanitizes inputs against query selector
+    injection attacks." It will strip out any keys that start with '$'
+    and it can be passed to MongoDB. 
     </div>
 
 
     <div id="sect_text_bold">
     Issue: DDOS
-    https://lab8-11-7-18.herokuapp.com/scores.json?username[$ne]=a_username_no_one_entered
+    </div>
+    <div id="sect_text">
+    Location Found: index.js in /submit post route
+    <div id="small-space"></div>
+    Severity: High. A DDOS attack can not only restrict access to
+    a website but often when doing so the service becomes vulnerable
+    to other attacks. 
+    <div id="small-space"></div>
+    Description: It was a bit harder to test a DDOS attack, but I looked
+    through Anna's code and discovered that there were no limitations
+    on requests coming from a given source (or even a lot coming from distributed services). I could not fully test a DDOS attack because
+    I did not want to charge Anna extra money for overflowing her Mongo
+    database, but I wrote a simple script to use curl to send a bunch of
+    submit requests to the server. Below is the script (note that I could have used an infinite loop but again didn't want to charge her money).
+    <div id="code-ex">
+    #!/bin/bash <div id="tiny-space"></div>
+    for ((i=1; i<=1000; i++)) <div id="tiny-space"></div>
+    do <div id="tiny-space"></div>
+        curl --data "username=hacked!&score=6670&grid={}" https://lab8-11-7-18.herokuapp.com/submit <div id="tiny-space"></div>
+    done <div id="tiny-space"></div>
+    echo "done"
+    </div>
+    Although I could not perform a full DDOS attack, it could be done.
+    DDOS attacks are what I wrote in this single script but
+    then performed on a distributed bot net. I am just one person with
+    a single computer, so this script would not be sufficient to break
+    the server. However, if there were many computers running this same
+    script a DDOS attack could be performed. There is nothing that
+    prevents this in Anna's website.
+    <div id="small-space"></div>
+    Proof of Vulnerability:<div id="tiny-space"></div>
+    Timestamp: Thu Dec 06 2018 05:59:48 GMT+0000 (Coordinated Universal Time)<div id="tiny-space"></div>
+    User: hacked!<div id="tiny-space"></div>
+    Score: 6670<div id="tiny-space"></div>
+
+    Timestamp: Thu Dec 06 2018 05:59:48 GMT+0000 (Coordinated Universal Time)<div id="tiny-space"></div>
+    User: hacked!<div id="tiny-space"></div>
+    Score: 6670<div id="tiny-space"></div>
+
+    Timestamp: Thu Dec 06 2018 05:59:48 GMT+0000 (Coordinated Universal Time)<div id="tiny-space"></div>
+    User: hacked!<div id="tiny-space"></div>
+    Score: 6670<div id="tiny-space"></div>
+
+    Timestamp: Thu Dec 06 2018 05:59:48 GMT+0000 (Coordinated Universal Time)<div id="tiny-space"></div>
+    User: hacked!<div id="tiny-space"></div>
+    Score: 6670
+    <div id="small-space"></div>
+    Evident that many requests are sent in a very short period of time. <div id="small-space"></div>
+    Resolution: Use <a href ="https://www.npmjs.com/package/express-rate-limit"> express rate limit node package.</a> It limits the same IP address to only so many
+    requests. For more robust purposes, there are other services such as Cloudfare
+    that offer protection against DDOS attacks. 
+    </div>
+    </div>
     </div>
 
     <div id="sect_text_bold">
-    Issue: Hardcoding Username
+    Issue: Broken Access Control
+    </div>
+     <div id="sect_text">
+    Location Found: index.js, line 10.
     </div>
     
     

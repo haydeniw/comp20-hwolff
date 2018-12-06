@@ -245,7 +245,7 @@
     private information that is stored (such as a username, password, etc.) can be
     accessed. It would be beneficial to limit cross-origin resource sharing to specific
     websites rather than to any potential attacker. It took me a while to realize that
-    this was a vulnerability and could only determine it by reading the source code. These two standalone lines in Anna's code allos for CORS and don't limit who has access:
+    this was a vulnerability and could only determine it by reading the source code. These two standalone lines in Anna's code allow for CORS and don't limit who has access:
     <div id="code-ex">
     var cors = require('cors'); <div id="tiny-space"> </div>
     app.use(cors()); 

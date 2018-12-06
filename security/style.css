@@ -70,11 +70,20 @@ h3 {
 
 #tiny-space{
 	color: black;
-	padding-top: 2px;
+	padding-top: 1px;
     padding-right: 10px;
-    padding-bottom: 2px;
+    padding-bottom: 1px;
     padding-left: 100px;
-	font-size: 14px;
+}
+
+#code-ex{
+	font-family: 'Inconsolata', monospace;
+	color: black;
+	padding-top: 10px;
+    padding-right: 100px;
+    padding-bottom: 20px;
+    padding-left: 60px;
+	font-size: 10px;
 }
 
 

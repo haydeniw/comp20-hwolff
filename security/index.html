@@ -92,11 +92,56 @@ HARDCODED IN OR NOT
     Issue: XSS
     </div>
     <div id="sect_text">
+    Location Found: index.html in /submit post route.
+    <div id="small-space"></div>
+    Severity: High. XSS can very easily compromise
+    a user's safety data and additionally break an entire website
+    with doing something as simple as redirecting it (which doesn't
+    allow a user to access it).
+    <div id="small-space"></div>
+    Description: Because the code does not check for special characters
+    in user input, it is possible to inject scripts. This was the first
+    vulnerability I checked for, and upon realizing that the website 
+    trusted that user input would be okay, I used curl to send a username
+    that wasn't actually a username but rather a script that redirected the page.
+    <div id="tiny-space"></div>
+    Rather than just inserting fields that the user provides in the form
+    of input, characters should be stripped first. Below is how things
+    are inserted (without being checked first).
+    <div id="code-ex">
+        var toInsert = { <div id="tiny-space"></div>
+                'username': request.body.username, <div id="tiny-space"></div>
+                'score': request.body.score, <div id="tiny-space"></div>
+                'grid': request.body.grid, <div id="tiny-space"></div>
+                'created_at': new Date(),<div id="tiny-space"></div>
+            };<div id="tiny-space"></div>
+    </div>
+
+    <div id="small-space"></div>
+    Proof of Vulnerability <div id="small-space"></div>
+    <img src="xss_example.gif" alt= "Gif of Heroku page redirecting to Giphy">
+    <div id="small-space"></div>
+    Above: Redirects 2048 scores to Giphy
+    </div>
+    <div id=sect_text>
+    Resolution: Do not trust user input. Validate and clean user input
+    before inserting it into a database or displaying it on a page. The
+    following code can be used to strip characters that are often associated with malicious user input. Additionally, limiting the
+    number of characters in a field can also be a good idea.
+    <div id="code-ex">
+    var username = request.body.username; <div id="tiny-space"></div>
+    username = username.replace(/[^\w\s]/gi, ''); // remove special chars <div id="tiny-space"></div>
+    var toInsert = { <div id="tiny-space"></div>
+        "username": username, <div id="tiny-space"></div>
+    };<div id="tiny-space"></div>
+    </div>
     </div>
 
     <div id="sect_text_bold">
     Issue: Mongo Injection
     </div>
+    <div id="sect_text">
+    Location Found: index.html in /submit post route.
 
     <div id="sect_text_bold">
     Issue: DDOS
